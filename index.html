@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pay Button</title>
+  </head>
+  <body>
+    <button id="payBtn">Pay</button>
+
+    <script>
+      document.getElementById("payBtn").addEventListener("click", async () => {
+        try {
+          const response = await fetch("http://localhost:3000/pay", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ amount: 1, invoiceId: "12345" }), // Add your payload here
+          })
+
+          const data = await response.json()
+          console.log("Success:", data)
+          window.location.href = data.bkashURL
+        } catch (error) {
+          console.error("Error:", error)
+        }
+      })
+    </script>
+  </body>
+</html>

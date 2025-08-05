@@ -10,8 +10,9 @@ app.use(cors())
 app.use(express.json())
 
 app.post("/pay", async (req, res) => {
-  const { amount, invoiceId } = req.body
+  const { amount } = req.body
 
+  const invoiceId = Date.now().toString()
   if (!amount || !invoiceId) {
     return res.status(400).json({ error: "amount and invoiceId required" })
   }
@@ -30,10 +31,30 @@ app.post("/pay", async (req, res) => {
   }
 })
 
-app.post("/callback", (req, res) => {
-  console.log("REQUEST AT /callback")
-  console.log(req.body)
-  res.status(200).json({ message: "success" })
+const { executePayment } = require("./bkash") // <- Import it
+
+app.get("/callback", async (req, res) => {
+  const { paymentID, status } = req.query
+
+  console.log("Callback hit with:", req.query)
+
+  if (status === "success") {
+    try {
+      const result = await executePayment(paymentID)
+      console.log("✅ Payment executed:", result)
+
+      res.send("✅ Payment completed successfully!")
+    } catch (err) {
+      console.error("❌ Execution failed:", err.message)
+      res.send("⚠️ Payment execution failed.")
+    }
+  } else {
+    res.send("❌ Payment failed or canceled.")
+  }
+})
+
+app.get("/", (req, res) => {
+  res.send("Hello World!")
 })
 
 app.listen(PORT, () => {
