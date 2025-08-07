@@ -48,7 +48,7 @@ async function createPayment(amount, invoiceId) {
 
   try {
     const response = await axios.post(url, body, { headers })
-    console.log("RESPONSE: ", response.data)
+    // console.log("RESPONSE: ", response.data)
     return response.data
   } catch (err) {
     console.error(
@@ -62,18 +62,22 @@ async function createPayment(amount, invoiceId) {
 async function executePayment(paymentID) {
   const id_token = await getToken()
 
-  console.log("ID TOKEN", id_token)
+  // console.log("ID TOKEN", id_token)
 
-  const url = `${config.baseURL}/tokenized/checkout/execute/${paymentID}`
+  const url = `${config.baseURL}/tokenized/checkout/execute`
   const headers = {
     "Content-Type": "application/json",
-    Authorization: `Bearer ${id_token}`,
+    authorization: id_token,
     "x-app-key": config.app_key,
   }
 
+  const body = {
+    paymentID,
+  }
+
   try {
-    const response = await axios.post(url, {}, { headers })
-    console.log("Execute Payment Response:", response.data)
+    const response = await axios.post(url, body, { headers })
+    console.log("ExecutePayment Response:", response.data)
     if (response.data && response.data.statusCode !== "0000") {
       throw new Error("Execution failed: " + response.data.statusMessage)
     }

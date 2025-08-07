@@ -1,6 +1,6 @@
 // bkashConfig.js
 module.exports = {
-  baseURL: "https://tokenized.sandbox.bka.sh/v1.2.0-beta",
+  baseURL: "https://tokenized.pay.bka.sh/v1.2.0-beta",
   app_key: "",
   app_secret: "",
   username: "",

@@ -46,7 +46,7 @@ app.get("/callback", async (req, res) => {
       res.send("✅ Payment completed successfully!")
     } catch (err) {
       console.error("❌ Execution failed:", err.message)
-      res.send("⚠️ Payment execution failed.")
+      res.send("⚠️ " + err.message)
     }
   } else {
     res.send("❌ Payment failed or canceled.")
